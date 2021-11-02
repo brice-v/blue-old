@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"blue/lexer"
+	"blue/parser"
 	"blue/token"
 	"flag"
 	"fmt"
@@ -21,6 +22,7 @@ func readAll(filename string) string {
 func Run(args []string) {
 	lFlag := flag.String("l", "", "Enter a file to be lexed and printed to the screen")
 	sFlag := flag.String("s", "", "Enter a file to be lexed and print illegal token spans")
+	aFlag := flag.String("a", "", "Enter a file to be parsed and the ast printed to the screen")
 	vFlag := flag.Bool("v", false, "Prints the version of blue to the screen")
 	flag.Parse()
 	if lFlag != nil && *lFlag != "" {
@@ -31,6 +33,9 @@ func Run(args []string) {
 	}
 	if vFlag != nil && *vFlag {
 		fmt.Println(VERSION)
+	}
+	if aFlag != nil && *aFlag != "" {
+		parseFile(*aFlag)
 	}
 }
 
@@ -51,4 +56,12 @@ func spanFile(filename string) {
 			fmt.Print(msgToPrint)
 		}
 	}
+}
+
+func parseFile(filename string) {
+	input := readAll(filename)
+	l := lexer.New(input, filename)
+	p := parser.New(l)
+	ast := p.ParseProgram()
+	fmt.Println(ast.Display())
 }

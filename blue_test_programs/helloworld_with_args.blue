@@ -1,0 +1,5 @@
+fun name(a, b, c) {
+    "a=#{a} b=#{b} c=#{c}"
+}
+
+name("Something", [1,2,3], {name: "Brice", year: 3000})
